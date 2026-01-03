@@ -281,6 +281,9 @@ body {
 
 /* 탭 */
 .tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
   height: 65px;
   width: 600px;
   max-width: 100%;
@@ -294,6 +297,7 @@ body {
 }
 
 .tab {
+  position: relative;
   font-family: "Paperozi";
   font-weight: 500;
   font-size: 18px;
@@ -303,10 +307,25 @@ body {
   border-radius: 999px;
   cursor: pointer;
   color: #333;
+  z-index: 1;
 }
 
-.tabActive {
+/* .tabActive {
   background: #f6e8a8;
+} */
+
+.tabItem {
+  position: relative;
+  display: inline-flex;
+}
+
+.tabPill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #f6e8a8;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  z-index: 0;
 }
 
 /* 결과 그리드 */
@@ -314,6 +333,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
+  will-change: transform, opacity;
 }
 
 @media (max-width: 980px) {
