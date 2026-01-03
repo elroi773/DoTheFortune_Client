@@ -36,7 +36,7 @@ export default function MyPage() {
     return results.filter((r) => r.type === activeTab);
   }, [activeTab, results]);
 
-  // 3열 그리드 기준으로 "추가 배경"이 필요한지 계산
+  // 3열 그리드 기준으로 추가 배경이 필요한지 계산
   const columns = 3;
   const rows = Math.max(1, Math.ceil(filtered.length / columns));
   const baseRowsCovered = 2; // 기본 큰 배경이 보통 2줄 정도는 커버
@@ -77,7 +77,6 @@ export default function MyPage() {
 
       {/* 프로필 카드 */}
       <section className={styles.profileWrap}>
-        {/* 요청하신 상단 배경 SVG */}
         <div className={styles.profileBg} aria-hidden="true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -92,111 +91,61 @@ export default function MyPage() {
         </div>
 
         <div className={styles.profileContent}>
-          <div className={styles.avatar}>
-            <div className={styles.avatarCircle} />
-            <button className={styles.avatarEdit} aria-label="edit profile">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M14.06 4.94 17.81 8.69"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+          <div className={styles.profileComponents}>
+            <div className={styles.avatar}>
+              <div className={styles.avatarCircle} />
+              <button className={styles.avatarEdit} aria-label="edit profile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M3 17.25V21h3.75L17.8 9.95l-3.75-3.75L3 17.25Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M14.06 4.94 17.81 8.69"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
 
-          <div className={styles.profileText}>
-            <div className={styles.profileName}>공구님</div>
-            <div className={styles.profileEmail}>bornin2009@gmail.com</div>
-          </div>
+            <div className={styles.profileText}>
+              <div className={styles.profileName}>공구님</div>
+              <div className={styles.profileEmail}>bornin2009@gmail.com</div>
+            </div>
 
-          <button className={styles.logoutBtn}>로그아웃하기</button>
+            <button className={styles.logoutBtn}>로그아웃하기</button>
+          </div>
         </div>
       </section>
 
       {/* 최근 기록 섹션 */}
-      <section className={styles.recordsWrap}>
-        {/* 배경 SVG 스택 (기본 큰 배경 + 추가 배경(겹침)) */}
-        <div className={styles.recordsBg} aria-hidden="true">
-          <div className={styles.bgStack}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1752 1454"
-              className={styles.svgFull}
-            >
-              <g filter="url(#filter0_d_178_43)">
-                <path
-                  d="M739.51 62.9541C940.959 119.816 1601.57 -268.685 1733.85 388.42C1761.54 525.964 1747.08 638.645 1703.71 727.976C1715.6 760.801 1725.72 797.227 1733.85 837.602C1834.81 1339.17 1375.39 1510.12 996.944 1423.79C618.494 1337.47 49.5198 1595.75 4 998.996C4.00001 900.34 10.2364 801.021 36.2285 714.928C19.9671 668.877 8.92232 614.345 4 549.814C4.00003 216.416 75.1984 -124.557 739.51 62.9541Z"
-                  fill="white"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_d_178_43"
-                  x="0"
-                  y="0"
-                  width="1752"
-                  height="1453.18"
-                  filterUnits="userSpaceOnUse"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dy="4" />
-                  <feGaussianBlur stdDeviation="2" />
-                  <feComposite in2="hardAlpha" operator="out" />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in2="BackgroundImageFix"
-                    result="effect1_dropShadow_178_43"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="effect1_dropShadow_178_43"
-                    result="shape"
-                  />
-                </filter>
-              </defs>
-            </svg>
-
-            {/* 요청: 결과 컴포넌트가 늘어날 때마다 아래 SVG가 "겹쳐지며" 추가 */}
-            {Array.from({ length: extraLayers }).map((_, idx) => (
+      <div className={styles.recordsSectionDown}>
+        <section className={styles.recordsWrap}>
+          {/* 배경 SVG 스택 (기본 큰 배경 + 추가 배경(겹침)) */}
+          <div className={styles.recordsBg} aria-hidden="true">
+            <div className={styles.bgStack}>
               <svg
-                key={idx}
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1752 1004"
-                className={`${styles.svgFull} ${styles.svgOverlap}`}
+                viewBox="0 0 1752 1454"
+                className={styles.svgFull}
               >
-                <g filter="url(#filter0_d_50_139)">
+                <g filter="url(#filter0_d_178_43)">
                   <path
-                    d="M1733.85 388.419C1834.81 889.986 1375.39 1060.94 996.944 974.611C618.494 888.286 49.5198 1146.57 4 549.815C4 216.416 75.1982 -124.557 739.51 62.9543C940.959 119.816 1601.57 -268.685 1733.85 388.419Z"
+                    d="M739.51 62.9541C940.959 119.816 1601.57 -268.685 1733.85 388.42C1761.54 525.964 1747.08 638.645 1703.71 727.976C1715.6 760.801 1725.72 797.227 1733.85 837.602C1834.81 1339.17 1375.39 1510.12 996.944 1423.79C618.494 1337.47 49.5198 1595.75 4 998.996C4.00001 900.34 10.2364 801.021 36.2285 714.928C19.9671 668.877 8.92232 614.345 4 549.814C4.00003 216.416 75.1984 -124.557 739.51 62.9541Z"
                     fill="white"
                   />
                 </g>
                 <defs>
                   <filter
-                    id="filter0_d_50_139"
+                    id="filter0_d_178_43"
                     x="0"
                     y="0"
                     width="1752"
-                    height="1004"
+                    height="1453.18"
                     filterUnits="userSpaceOnUse"
                     colorInterpolationFilters="sRGB"
                   >
@@ -217,46 +166,100 @@ export default function MyPage() {
                     <feBlend
                       mode="normal"
                       in2="BackgroundImageFix"
-                      result="effect1_dropShadow_50_139"
+                      result="effect1_dropShadow_178_43"
                     />
                     <feBlend
                       mode="normal"
                       in="SourceGraphic"
-                      in2="effect1_dropShadow_50_139"
+                      in2="effect1_dropShadow_178_43"
                       result="shape"
                     />
                   </filter>
                 </defs>
               </svg>
-            ))}
-          </div>
-        </div>
 
-        <div className={styles.recordsContent}>
-          <h2 className={styles.sectionTitle}>최근 본 운세 기록</h2>
-
-          <div className={styles.tabs}>
-            {TABS.map((t) => {
-              const active = t.key === activeTab;
-              return (
-                <button
-                  key={t.key}
-                  className={`${styles.tab} ${active ? styles.tabActive : ""}`}
-                  onClick={() => setActiveTab(t.key)}
+              {/* 요청: 결과 컴포넌트가 늘어날 때마다 아래 SVG가 "겹쳐지며" 추가 */}
+              {Array.from({ length: extraLayers }).map((_, idx) => (
+                <svg
+                  key={idx}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 1752 1004"
+                  className={`${styles.svgFull} ${styles.svgOverlap}`}
                 >
-                  {t.label}
-                </button>
-              );
-            })}
+                  <g filter="url(#filter0_d_50_139)">
+                    <path
+                      d="M1733.85 388.419C1834.81 889.986 1375.39 1060.94 996.944 974.611C618.494 888.286 49.5198 1146.57 4 549.815C4 216.416 75.1982 -124.557 739.51 62.9543C940.959 119.816 1601.57 -268.685 1733.85 388.419Z"
+                      fill="white"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_d_50_139"
+                      x="0"
+                      y="0"
+                      width="1752"
+                      height="1004"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feColorMatrix
+                        in="SourceAlpha"
+                        type="matrix"
+                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha"
+                      />
+                      <feOffset dy="4" />
+                      <feGaussianBlur stdDeviation="2" />
+                      <feComposite in2="hardAlpha" operator="out" />
+                      <feColorMatrix
+                        type="matrix"
+                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
+                      />
+                      <feBlend
+                        mode="normal"
+                        in2="BackgroundImageFix"
+                        result="effect1_dropShadow_50_139"
+                      />
+                      <feBlend
+                        mode="normal"
+                        in="SourceGraphic"
+                        in2="effect1_dropShadow_50_139"
+                        result="shape"
+                      />
+                    </filter>
+                  </defs>
+                </svg>
+              ))}
+            </div>
           </div>
 
-          <div className={styles.grid}>
-            {filtered.map((item) => (
-              <ResultCard key={item.id} title={item.title} />
-            ))}
+          <div className={styles.recordsContent}>
+            <h2 className={styles.sectionTitle}>최근 본 운세 기록</h2>
+
+            <div className={styles.tabs}>
+              {TABS.map((t) => {
+                const active = t.key === activeTab;
+                return (
+                  <button
+                    key={t.key}
+                    className={`${styles.tab} ${active ? styles.tabActive : ""}`}
+                    onClick={() => setActiveTab(t.key)}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className={styles.grid}>
+              {filtered.map((item) => (
+                <ResultCard key={item.id} title={item.title} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

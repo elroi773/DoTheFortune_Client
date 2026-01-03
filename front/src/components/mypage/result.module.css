@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Paperozi";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
 .card {
   position: relative;
   height: 150px;
@@ -23,10 +30,11 @@
 }
 
 .text {
+  font-family: "Paperozi";
   position: relative;
   z-index: 1;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 500;
   color: #222;
   letter-spacing: -0.02em;
 }
