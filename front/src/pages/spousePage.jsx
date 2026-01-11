@@ -1,81 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import logo from '../assets/logo.svg';
-import Header from "../components/Header";
-import Loading from '../components/loading/Loading';
+import { createRecord, getFortuneInfo } from '../utils/api';
+
+// 배우자 이미지 목록 (assets 폴더에 이미지 파일들을 추가하면 됩니다)
+// 예: spouse1.jpg, spouse2.jpg, spouse3.jpg 등
+// 임시로 기본 이미지들을 사용합니다. 실제 이미지 파일이 있으면 import 해서 사용하세요
+const SPOUSE_IMAGES = [
+  // 여기에 배우자 이미지 파일들을 import 해주세요
+  // 예: import spouse1 from '../assets/spouse1.jpg';
+  // import spouse2 from '../assets/spouse2.jpg';
+  // 등등...
+];
 
 const GlobalStyle = createGlobalStyle`
-    @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2")
-      format("woff2");
-    font-weight: 100;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2")
-      format("woff2");
-    font-weight: 200;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2")
-      format("woff2");
-    font-weight: 300;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2")
-      format("woff2");
-    font-weight: 400;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2")
-      format("woff2");
-    font-weight: 500;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2")
-      format("woff2");
-    font-weight: 600;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2")
-      format("woff2");
-    font-weight: 700;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2")
-      format("woff2");
-    font-weight: 800;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Paperozi";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2")
-      format("woff2");
-    font-weight: 900;
-    font-display: swap;
-  }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -83,8 +22,7 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: "Paperozi";
-
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 `;
 
@@ -98,7 +36,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const TopHeader = styled(Header)`
+const TopHeader = styled.div`
   position: absolute;
   top: 30px;
   left: 40px;
@@ -106,16 +44,18 @@ const TopHeader = styled(Header)`
   align-items: center;
   gap: 12px;
   z-index: 10;
+`;
 
-  .header__logo {
-    width: 50px;
-  }
+const Logo = styled.div`
+  font-size: 50px;
+  line-height: 1;
+  img { width: 50px; }
+`;
 
-  .header__title {
-    font-size: 30px;
-    font-weight: bold;
-    color: #2c2c2c;
-  }
+const Title = styled.div`
+  font-size: 30px;
+  font-weight: bold;
+  color: #2c2c2c;
 `;
 
 const ContentCard = styled.div`
@@ -223,7 +163,6 @@ const InfoItem = styled.div`
 `;
 
 const SaveButton = styled.button`
-  font-family: "Paperozi";
   width: 100%;
   max-width: 500px;
   height: 48px;
@@ -236,7 +175,6 @@ const SaveButton = styled.button`
   cursor: pointer;
   transition: all 0.3s;
   font-weight: 400;
-
 
   &:hover {
     background: #FFD93D;
@@ -258,6 +196,7 @@ const LoadingMessage = styled.div`
 `;
 
 export default function SpousePage() {
+  const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
   
   const [spouseData, setSpouseData] = useState(null);
@@ -299,15 +238,44 @@ export default function SpousePage() {
     fetchSpouseData();
   }, []);
 
-  const handleSave = () => {
-    setSaved(true);
-    alert('저장되었습니다! 📸');
-    setTimeout(() => setSaved(false), 2000);
+  const handleSave = async () => {
+    if (saved) return;
+    
+    try {
+      setSaved(true);
+      
+      const content = `나의 미래 배우자\n인상: ${spouseData?.impression?.join(", ") || ""}\n패션: ${spouseData?.fashion?.join(", ") || ""}\n무드: ${spouseData?.mood?.join(", ") || ""}\n직업: ${spouseData?.job?.join(", ") || ""}`;
+      const metadata = JSON.stringify({
+        impression: spouseData?.impression || [],
+        fashion: spouseData?.fashion || [],
+        mood: spouseData?.mood || [],
+        job: spouseData?.job || [],
+        image_url: spouseData?.imageUrl || "",
+      });
+
+      await createRecord({
+        type: "ai_spouse",
+        content: content,
+        image_url: spouseData?.imageUrl || "",
+        metadata: metadata,
+      });
+
+      alert('저장되었습니다! 📸');
+    } catch (err) {
+      console.error("저장 실패:", err);
+      setSaved(false);
+      alert(err.message || "저장 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    }
   };
 
   if (loading) {
     return (
-      <Loading>결과를 불러오는 중입니다...</Loading>
+      <Container>
+        <LoadingMessage>
+          <div>🔮</div>
+          <div>결과 분석 중입니다...</div>
+        </LoadingMessage>
+      </Container>
     );
   }
 
@@ -323,7 +291,13 @@ export default function SpousePage() {
     <>
       <GlobalStyle />
       <Container>
-        <TopHeader logoSrc={logo} title="빌려온 사주" showSettings={false} />
+        <TopHeader>
+          <Logo onClick={() => navigate("/home")} style={{ cursor: "pointer" }}>
+            <img src={logo} alt="logo"/>
+          </Logo>
+          <Title onClick={() => navigate("/home")} style={{ cursor: "pointer" }}>빌려온 사주</Title>
+        </TopHeader>
+
         <ContentCard>
           <TextGroup>
             <MainTitle>나의 미래 배우자는?</MainTitle>
