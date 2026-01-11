@@ -20,28 +20,25 @@ const FEATURE_META = [
   {
     id: "future-partner",
     title: "AI로 미래의 배우자 그려주기",
-    to: "/information",
-    state: { type: 1 },
+    to: "/information?type=2",
     imageUrl: Card1,
   },
   {
     id: "similar-friend",
     title: "유사 사주 친구 찾기",
-    to: "/information",
-    state: { type: 2 },
+    to: "/information?type=1",
     imageUrl: Card2,
   },
   {
     id: "compat-score",
     title: "사주 궁합 점수 보기",
-    state: { type: 3 },
-    to: "/information",
+    to: "/information?type=3",
     imageUrl: Card3,
   },
   {
     id: "today-luck",
     title: "오늘의 운세 보기",
-    to: "/today",
+    to: "/home",
     imageUrl: Card1,
   },
 ];
@@ -111,6 +108,7 @@ async function getHomeDaily(nickname) {
 
 export default function Home() {
   const navigate = useNavigate();
+  const userName = localStorage.getItem("name") || "";
 
   return (
     <div className="homePage">
@@ -130,8 +128,10 @@ export default function Home() {
           />
         </svg>
 
-        <img src={Logo} alt="Home Logo" className="home-logo" />
-        <h1>빌려온 사주</h1>
+        <div onClick={() => navigate("/home")} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "12px" }}>
+          <img src={Logo} alt="Home Logo" className="home-logo" />
+          <h1>빌려온 사주</h1>
+        </div>
 
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +156,7 @@ export default function Home() {
       </div>
 
       {/* Dashboard */}
-      <HomeDashboard onNavigate={navigate} nickname="희진" />
+      <HomeDashboard onNavigate={navigate} nickname={userName} />
 
       {/* Footer */}
       <Footer />
@@ -258,7 +258,15 @@ function HomeDashboard({ onNavigate, nickname }) {
                   type="button"
                   className="homeDashboard__card"
                   style={{ backgroundImage: `url(${item.imageUrl})` }}
-                  onClick={() => item.to && onNavigate(item.to)}
+                  onClick={() => {
+                    if (item.to) {
+                      if (item.to.startsWith("/")) {
+                        onNavigate(item.to);
+                      } else {
+                        window.location.href = item.to;
+                      }
+                    }
+                  }}
                 >
                   <div className="homeDashboard__cardOverlay" />
                   <div className="homeDashboard__cardText">
